@@ -7,12 +7,12 @@ import java.util.UUID;
 
 public class Contact {
     private String id;
-    private String ownerEmail;
+    private String ownerEmail; // logged-in user email
     private String name;
     private List<String> phoneNumbers;
     private List<String> emailAddresses;
-    private String company;
-    private String notes;
+    private String company;     // optional
+    private String notes;       // optional
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -39,19 +39,25 @@ public class Contact {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public void setName(String name) { this.name = name; this.updatedAt = LocalDateTime.now(); }
-    public void setCompany(String company) { this.company = company; this.updatedAt = LocalDateTime.now(); }
-    public void setNotes(String notes) { this.notes = notes; this.updatedAt = LocalDateTime.now(); }
+    public void setName(String name) {
+        this.name = name;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+        this.updatedAt = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {
-        return "Contact ID: " + id + "\n" +
-               "Name: " + name + "\n" +
-               "Phone Numbers: " + phoneNumbers + "\n" +
-               "Email Addresses: " + emailAddresses + "\n" +
-               "Company: " + (company == null || company.isBlank() ? "N/A" : company) + "\n" +
-               "Notes: " + (notes == null || notes.isBlank() ? "N/A" : notes) + "\n" +
-               "Created At: " + createdAt + "\n" +
-               "Updated At: " + updatedAt;
+        return "Contact{id='" + id + "', name='" + name + "', phones=" + phoneNumbers +
+                ", emails=" + emailAddresses + ", company='" + company + "', notes='" + notes +
+                "', createdAt=" + createdAt + "}";
     }
 }

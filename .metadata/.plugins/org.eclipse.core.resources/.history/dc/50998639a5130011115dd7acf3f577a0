@@ -2,12 +2,11 @@ package com.seveneleven.UserRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ContactService {
     private List<Contact> contacts = new ArrayList<>();
 
-    // UC-04
+    // UC-04 Create Contact
     public Contact createContact(User loggedInUser,
                                  String name,
                                  List<String> phoneNumbers,
@@ -35,7 +34,6 @@ public class ContactService {
         return contact;
     }
 
-    // UC-04 list
     public List<Contact> getContactsForUser(User loggedInUser) {
         List<Contact> result = new ArrayList<>();
         if (loggedInUser == null) return result;
@@ -46,21 +44,6 @@ public class ContactService {
             }
         }
         return result;
-    }
-
-    // UC-05 view contact details by ID
-    public Optional<Contact> getContactByIdForUser(User loggedInUser, String contactId) {
-        if (loggedInUser == null || contactId == null || contactId.trim().isEmpty()) {
-            return Optional.empty();
-        }
-
-        for (Contact c : contacts) {
-            if (c.getOwnerEmail().equalsIgnoreCase(loggedInUser.getEmail()) &&
-                c.getId().equals(contactId.trim())) {
-                return Optional.of(c);
-            }
-        }
-        return Optional.empty();
     }
 
     private void validateName(String name) throws ValidationException {
@@ -85,7 +68,7 @@ public class ContactService {
     }
 
     private void validateEmailList(List<String> emails) throws ValidationException {
-        if (emails == null || emails.isEmpty()) return;
+        if (emails == null || emails.isEmpty()) return; // optional
 
         String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         for (String e : emails) {

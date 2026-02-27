@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static User currentUser = null;
+    private static User currentUser = null; // simple session (OOP only)
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -25,8 +25,7 @@ public class Main {
             System.out.println("7. Logout");
             System.out.println("8. Create Contact (UC4)");
             System.out.println("9. List My Contacts");
-            System.out.println("10. View Contact Details (UC5)");
-            System.out.println("11. Exit");
+            System.out.println("10. Exit");
             System.out.print("Enter choice: ");
 
             int choice;
@@ -42,14 +41,19 @@ public class Main {
                     case 1:
                         System.out.print("Enter Name: ");
                         String name = sc.nextLine();
+
                         System.out.print("Enter Email: ");
                         String email = sc.nextLine();
+
                         System.out.print("Enter Password: ");
                         String password = sc.nextLine();
+
                         System.out.print("Enter Phone: ");
                         String phone = sc.nextLine();
+
                         System.out.print("Enter Address: ");
                         String address = sc.nextLine();
+
                         System.out.print("Enter User Type (FREE/PREMIUM): ");
                         String userType = sc.nextLine();
 
@@ -60,6 +64,7 @@ public class Main {
                     case 2:
                         System.out.print("Enter Email: ");
                         String loginEmail = sc.nextLine();
+
                         System.out.print("Enter Password: ");
                         String loginPassword = sc.nextLine();
 
@@ -73,17 +78,25 @@ public class Main {
                         break;
 
                     case 3:
-                        if (currentUser == null) System.out.println("No user logged in.");
-                        else System.out.println("Current user: " + currentUser);
+                        if (currentUser == null) {
+                            System.out.println("No user logged in.");
+                        } else {
+                            System.out.println("Current user: " + currentUser);
+                        }
                         break;
 
                     case 4:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("New Name: ");
                         String newName = sc.nextLine();
+
                         System.out.print("New Phone: ");
                         String newPhone = sc.nextLine();
+
                         System.out.print("New Address: ");
                         String newAddress = sc.nextLine();
 
@@ -92,10 +105,14 @@ public class Main {
                         break;
 
                     case 5:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("Old Password: ");
                         String oldPassword = sc.nextLine();
+
                         System.out.print("New Password: ");
                         String newPassword = sc.nextLine();
 
@@ -104,7 +121,10 @@ public class Main {
                         break;
 
                     case 6:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("New User Type (FREE/PREMIUM): ");
                         String newType = sc.nextLine();
@@ -119,7 +139,10 @@ public class Main {
                         break;
 
                     case 8:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("Contact Name: ");
                         String cName = sc.nextLine();
@@ -142,16 +165,20 @@ public class Main {
 
                         System.out.print("Company (optional): ");
                         String company = sc.nextLine();
+
                         System.out.print("Notes (optional): ");
                         String notes = sc.nextLine();
 
                         Contact created = contactService.createContact(currentUser, cName, phones, emails, company, notes);
                         System.out.println("Contact created successfully:");
-                        System.out.println("Contact ID: " + created.getId());
+                        System.out.println(created);
                         break;
 
                     case 9:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         List<Contact> myContacts = contactService.getContactsForUser(currentUser);
                         if (myContacts.isEmpty()) {
@@ -159,27 +186,12 @@ public class Main {
                         } else {
                             System.out.println("=== My Contacts ===");
                             for (Contact c : myContacts) {
-                                System.out.println(c.getId() + " | " + c.getName());
+                                System.out.println(c);
                             }
                         }
                         break;
 
                     case 10:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
-
-                        System.out.print("Enter Contact ID: ");
-                        String contactId = sc.nextLine();
-
-                        Optional<Contact> found = contactService.getContactByIdForUser(currentUser, contactId);
-                        if (found.isPresent()) {
-                            System.out.println("\n=== Contact Details ===");
-                            System.out.println(found.get()); // uses toString()
-                        } else {
-                            System.out.println("Contact not found.");
-                        }
-                        break;
-
-                    case 11:
                         System.out.println("Exiting...");
                         sc.close();
                         return;
