@@ -1,0 +1,5 @@
+package com.seveneleven.UserRegistration;
+
+public class ValidationException {
+
+}

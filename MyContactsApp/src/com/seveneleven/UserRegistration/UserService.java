@@ -1,13 +1,15 @@
 package com.seveneleven.UserRegistration;
 
-
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserService {
+
     private List<User> users = new ArrayList<>();
 
+    // UC-01 Registration
     public User registerUser(String name, String email, String password, String phone, String address, String userType)
             throws ValidationException {
 
@@ -26,6 +28,27 @@ public class UserService {
         return user;
     }
 
+    // UC-02 Basic Authentication support
+    public Optional<User> findUserByEmailAndPassword(String email, String password) {
+        if (email == null || email.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        if (password == null || password.trim().isEmpty()) {
+            return Optional.empty();
+        }
+
+        String hashedPassword = hashPassword(password);
+
+        for (User user : users) {
+            if (user.getEmail().equalsIgnoreCase(email)
+                    && user.getPasswordHash().equals(hashedPassword)) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
+    }
+
+    // ---------- Validation methods ----------
     private void validateName(String name) throws ValidationException {
         if (name == null || name.trim().isEmpty()) {
             throw new ValidationException("Name cannot be empty.");
@@ -64,22 +87,25 @@ public class UserService {
     }
 
     private void checkDuplicateEmail(String email) throws ValidationException {
-        for (User u : users) {
-            if (u.getEmail().equalsIgnoreCase(email)) {
+        for (User user : users) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
                 throw new ValidationException("Email already registered.");
             }
         }
     }
 
+    // ---------- Password Hash ----------
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] bytes = md.digest(password.getBytes());
+
             StringBuilder sb = new StringBuilder();
             for (byte b : bytes) {
                 sb.append(String.format("%02x", b));
             }
             return sb.toString();
+
         } catch (Exception e) {
             throw new RuntimeException("Error while hashing password.");
         }
