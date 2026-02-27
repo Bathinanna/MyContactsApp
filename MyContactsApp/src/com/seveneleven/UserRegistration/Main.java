@@ -4,22 +4,23 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
+
+    private static User currentUser = null; // simple session (no pattern)
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         UserService userService = new UserService();
 
-        Authentication basicAuth = new BasicAuthStrategy(userService);
-        Authentication oauthAuth = new OAuthStrategy();
-        AuthService authService = new AuthService(basicAuth);
-
         while (true) {
             System.out.println("\n=== MyContacts App ===");
             System.out.println("1. Register (UC1)");
-            System.out.println("2. Login - BasicAuth (UC2)");
-            System.out.println("3. Login - OAuth (UC2)");
-            System.out.println("4. Show Current Session User");
-            System.out.println("5. Logout");
-            System.out.println("6. Exit");
+            System.out.println("2. Login (UC2)");
+            System.out.println("3. Show Current User");
+            System.out.println("4. Update Profile (UC3)");
+            System.out.println("5. Change Password (UC3)");
+            System.out.println("6. Update Preference (UC3)");
+            System.out.println("7. Logout");
+            System.out.println("8. Exit");
             System.out.print("Enter choice: ");
 
             int choice;
@@ -56,30 +57,83 @@ public class Main {
                         break;
 
                     case 2:
-                        authService.setAuthentication(basicAuth);
-                        loginFlow(sc, authService);
-                        break;
+                        System.out.print("Enter Email: ");
+                        String loginEmail = sc.nextLine();
 
-                    case 3:
-                        authService.setAuthentication(oauthAuth);
-                        loginFlow(sc, authService);
-                        break;
+                        System.out.print("Enter Password: ");
+                        String loginPassword = sc.nextLine();
 
-                    case 4:
-                        User current = SessionManager.getInstance().getCurrentUser();
-                        if (current != null) {
-                            System.out.println("Logged-in user: " + current.getName() + " | " + current.getEmail());
+                        Optional<User> loginResult = userService.findUserByEmailAndPassword(loginEmail, loginPassword);
+                        if (loginResult.isPresent()) {
+                            currentUser = loginResult.get();
+                            System.out.println("Login successful. Welcome " + currentUser.getName());
                         } else {
-                            System.out.println("No active session.");
+                            System.out.println("Login failed. Invalid credentials.");
                         }
                         break;
 
+                    case 3:
+                        if (currentUser == null) {
+                            System.out.println("No user logged in.");
+                        } else {
+                            System.out.println("Current user: " + currentUser);
+                        }
+                        break;
+
+                    case 4:
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.print("New Name: ");
+                        String newName = sc.nextLine();
+
+                        System.out.print("New Phone: ");
+                        String newPhone = sc.nextLine();
+
+                        System.out.print("New Address: ");
+                        String newAddress = sc.nextLine();
+
+                        userService.updateProfile(currentUser, newName, newPhone, newAddress);
+                        System.out.println("Profile updated successfully.");
+                        break;
+
                     case 5:
-                        SessionManager.getInstance().clearSession();
-                        System.out.println("Logged out successfully.");
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.print("Old Password: ");
+                        String oldPassword = sc.nextLine();
+
+                        System.out.print("New Password: ");
+                        String newPassword = sc.nextLine();
+
+                        userService.changePassword(currentUser, oldPassword, newPassword);
+                        System.out.println("Password changed successfully.");
                         break;
 
                     case 6:
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.print("New User Type (FREE/PREMIUM): ");
+                        String newType = sc.nextLine();
+
+                        userService.updatePreference(currentUser, newType);
+                        System.out.println("Preference updated successfully.");
+                        break;
+
+                    case 7:
+                        currentUser = null;
+                        System.out.println("Logged out successfully.");
+                        break;
+
+                    case 8:
                         System.out.println("Exiting...");
                         sc.close();
                         return;
@@ -95,20 +149,4 @@ public class Main {
             }
         }
     }
-
-    private static void loginFlow(Scanner sc, AuthService authService) {
-        System.out.print("Enter Email: ");
-        String email = sc.nextLine();
-
-        System.out.print("Enter Password: ");
-        String password = sc.nextLine();
-
-        Optional<User> loginResult = authService.login(email, password);
-
-        if (loginResult.isPresent()) {
-            SessionManager.getInstance().createSession(loginResult.get());
-            System.out.println("Login successful. Welcome " + loginResult.get().getName());
-        } else {
-            System.out.println("Login failed. Invalid credentials.");
-        }
-    }
+}

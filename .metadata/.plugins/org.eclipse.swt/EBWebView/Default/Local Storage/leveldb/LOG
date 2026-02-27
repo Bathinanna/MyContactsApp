@@ -1,3 +1,2 @@
-2026/02/27-11:13:11.656 10a0 Reusing MANIFEST C:\Users\bbat3017\Desktop\MyContactsApp\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2026/02/27-11:13:11.675 10a0 Recovering log #3
-2026/02/27-11:13:11.683 10a0 Reusing old log C:\Users\bbat3017\Desktop\MyContactsApp\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+2026/02/27-11:42:24.455 5448 Creating DB C:\Users\bbat3017\Desktop\MyContactsApp\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
+2026/02/27-11:42:24.540 5448 Reusing MANIFEST C:\Users\bbat3017\Desktop\MyContactsApp\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
