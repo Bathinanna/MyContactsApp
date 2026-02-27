@@ -27,7 +27,8 @@ public class Main {
             System.out.println("9. List My Contacts");
             System.out.println("10. View Contact Details (UC5)");
             System.out.println("11. Edit Contact (UC6)");
-            System.out.println("12. Exit");
+            System.out.println("12. Delete Contact (UC7)");
+            System.out.println("13. Exit");
             System.out.print("Enter choice: ");
 
             int choice;
@@ -215,6 +216,24 @@ public class Main {
                         break;
 
                     case 12:
+                        if (currentUser == null) { System.out.println("Please login first."); break; }
+
+                        System.out.print("Enter Contact ID to delete: ");
+                        String deleteId = sc.nextLine();
+
+                        System.out.print("Are you sure you want to delete this contact? (yes/no): ");
+                        String confirm = sc.nextLine();
+
+                        if (!confirm.equalsIgnoreCase("yes")) {
+                            System.out.println("Delete cancelled.");
+                            break;
+                        }
+
+                        contactService.deleteContact(currentUser, deleteId);
+                        System.out.println("Contact deleted successfully.");
+                        break;
+
+                    case 13:
                         System.out.println("Exiting...");
                         sc.close();
                         return;
