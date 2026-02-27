@@ -1,0 +1,63 @@
+package com.seveneleven.UserRegistration;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class Contact {
+    private String id;
+    private String ownerEmail; // logged-in user email
+    private String name;
+    private List<String> phoneNumbers;
+    private List<String> emailAddresses;
+    private String company;     // optional
+    private String notes;       // optional
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public Contact(String ownerEmail, String name, List<String> phoneNumbers, List<String> emailAddresses,
+                   String company, String notes) {
+        this.id = UUID.randomUUID().toString();
+        this.ownerEmail = ownerEmail;
+        this.name = name;
+        this.phoneNumbers = new ArrayList<>(phoneNumbers);
+        this.emailAddresses = new ArrayList<>(emailAddresses);
+        this.company = company;
+        this.notes = notes;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public String getId() { return id; }
+    public String getOwnerEmail() { return ownerEmail; }
+    public String getName() { return name; }
+    public List<String> getPhoneNumbers() { return phoneNumbers; }
+    public List<String> getEmailAddresses() { return emailAddresses; }
+    public String getCompany() { return company; }
+    public String getNotes() { return notes; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    public void setName(String name) {
+        this.name = name;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{id='" + id + "', name='" + name + "', phones=" + phoneNumbers +
+                ", emails=" + emailAddresses + ", company='" + company + "', notes='" + notes +
+                "', createdAt=" + createdAt + "}";
+    }
+}
