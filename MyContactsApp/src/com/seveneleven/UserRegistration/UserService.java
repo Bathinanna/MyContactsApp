@@ -1,0 +1,87 @@
+package com.seveneleven.UserRegistration;
+
+
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserService {
+    private List<User> users = new ArrayList<>();
+
+    public User registerUser(String name, String email, String password, String phone, String address, String userType)
+            throws ValidationException {
+
+        validateName(name);
+        validateEmail(email);
+        validatePassword(password);
+        validatePhone(phone);
+        validateAddress(address);
+        validateUserType(userType);
+        checkDuplicateEmail(email);
+
+        String hashedPassword = hashPassword(password);
+
+        User user = new User(name, email, hashedPassword, phone, address, userType.toUpperCase());
+        users.add(user);
+        return user;
+    }
+
+    private void validateName(String name) throws ValidationException {
+        if (name == null || name.trim().isEmpty()) {
+            throw new ValidationException("Name cannot be empty.");
+        }
+    }
+
+    private void validateEmail(String email) throws ValidationException {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        if (email == null || !email.matches(emailRegex)) {
+            throw new ValidationException("Invalid email format.");
+        }
+    }
+
+    private void validatePassword(String password) throws ValidationException {
+        if (password == null || password.length() < 6) {
+            throw new ValidationException("Password must be at least 6 characters.");
+        }
+    }
+
+    private void validatePhone(String phone) throws ValidationException {
+        if (phone == null || phone.trim().isEmpty()) {
+            throw new ValidationException("Phone cannot be empty.");
+        }
+    }
+
+    private void validateAddress(String address) throws ValidationException {
+        if (address == null || address.trim().isEmpty()) {
+            throw new ValidationException("Address cannot be empty.");
+        }
+    }
+
+    private void validateUserType(String userType) throws ValidationException {
+        if (userType == null || !(userType.equalsIgnoreCase("FREE") || userType.equalsIgnoreCase("PREMIUM"))) {
+            throw new ValidationException("User type must be FREE or PREMIUM.");
+        }
+    }
+
+    private void checkDuplicateEmail(String email) throws ValidationException {
+        for (User u : users) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
+                throw new ValidationException("Email already registered.");
+            }
+        }
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] bytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : bytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while hashing password.");
+        }
+    }
+}
