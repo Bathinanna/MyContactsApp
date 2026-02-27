@@ -26,8 +26,7 @@ public class Main {
             System.out.println("8. Create Contact (UC4)");
             System.out.println("9. List My Contacts");
             System.out.println("10. View Contact Details (UC5)");
-            System.out.println("11. Edit Contact (UC6)");
-            System.out.println("12. Exit");
+            System.out.println("11. Exit");
             System.out.print("Enter choice: ");
 
             int choice;
@@ -147,7 +146,8 @@ public class Main {
                         String notes = sc.nextLine();
 
                         Contact created = contactService.createContact(currentUser, cName, phones, emails, company, notes);
-                        System.out.println("Contact created successfully. ID: " + created.getId());
+                        System.out.println("Contact created successfully:");
+                        System.out.println("Contact ID: " + created.getId());
                         break;
 
                     case 9:
@@ -173,48 +173,13 @@ public class Main {
                         Optional<Contact> found = contactService.getContactByIdForUser(currentUser, contactId);
                         if (found.isPresent()) {
                             System.out.println("\n=== Contact Details ===");
-                            System.out.println(found.get());
+                            System.out.println(found.get()); // uses toString()
                         } else {
                             System.out.println("Contact not found.");
                         }
                         break;
 
                     case 11:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
-
-                        System.out.print("Enter Contact ID to edit: ");
-                        String editId = sc.nextLine();
-
-                        System.out.print("New Contact Name: ");
-                        String editName = sc.nextLine();
-
-                        System.out.print("How many phone numbers? ");
-                        int editPCount = Integer.parseInt(sc.nextLine());
-                        List<String> editPhones = new ArrayList<>();
-                        for (int i = 1; i <= editPCount; i++) {
-                            System.out.print("Phone " + i + ": ");
-                            editPhones.add(sc.nextLine());
-                        }
-
-                        System.out.print("How many emails? (0 allowed): ");
-                        int editECount = Integer.parseInt(sc.nextLine());
-                        List<String> editEmails = new ArrayList<>();
-                        for (int i = 1; i <= editECount; i++) {
-                            System.out.print("Email " + i + ": ");
-                            editEmails.add(sc.nextLine());
-                        }
-
-                        System.out.print("New Company (optional): ");
-                        String editCompany = sc.nextLine();
-
-                        System.out.print("New Notes (optional): ");
-                        String editNotes = sc.nextLine();
-
-                        contactService.editContact(currentUser, editId, editName, editPhones, editEmails, editCompany, editNotes);
-                        System.out.println("Contact updated successfully.");
-                        break;
-
-                    case 12:
                         System.out.println("Exiting...");
                         sc.close();
                         return;
