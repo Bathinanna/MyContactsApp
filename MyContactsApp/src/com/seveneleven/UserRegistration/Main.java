@@ -28,7 +28,12 @@ public class Main {
             System.out.println("10. View Contact Details (UC5)");
             System.out.println("11. Edit Contact (UC6)");
             System.out.println("12. Delete Contact (UC7)");
-            System.out.println("13. Exit");
+            System.out.println("13. Bulk Delete Contacts (UC8)");
+            System.out.println("14. Bulk Tag Contacts (UC8)");
+            System.out.println("15. Bulk Export Contacts (UC8)");
+            System.out.println("16. Search Contacts (UC9)");
+            System.out.println("17. Basic Filtering (UC10)");
+            System.out.println("18. Exit");
             System.out.print("Enter choice: ");
 
             int choice;
@@ -75,12 +80,18 @@ public class Main {
                         break;
 
                     case 3:
-                        if (currentUser == null) System.out.println("No user logged in.");
-                        else System.out.println("Current user: " + currentUser);
+                        if (currentUser == null) {
+                            System.out.println("No user logged in.");
+                        } else {
+                            System.out.println("Current user: " + currentUser);
+                        }
                         break;
 
                     case 4:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("New Name: ");
                         String newName = sc.nextLine();
@@ -94,7 +105,10 @@ public class Main {
                         break;
 
                     case 5:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("Old Password: ");
                         String oldPassword = sc.nextLine();
@@ -106,7 +120,10 @@ public class Main {
                         break;
 
                     case 6:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("New User Type (FREE/PREMIUM): ");
                         String newType = sc.nextLine();
@@ -121,7 +138,10 @@ public class Main {
                         break;
 
                     case 8:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("Contact Name: ");
                         String cName = sc.nextLine();
@@ -152,7 +172,10 @@ public class Main {
                         break;
 
                     case 9:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         List<Contact> myContacts = contactService.getContactsForUser(currentUser);
                         if (myContacts.isEmpty()) {
@@ -166,14 +189,17 @@ public class Main {
                         break;
 
                     case 10:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("Enter Contact ID: ");
                         String contactId = sc.nextLine();
 
                         Optional<Contact> found = contactService.getContactByIdForUser(currentUser, contactId);
                         if (found.isPresent()) {
-                            System.out.println("\n Contact Details ");
+                            System.out.println("\nContact Details");
                             System.out.println(found.get());
                         } else {
                             System.out.println("Contact not found.");
@@ -181,7 +207,10 @@ public class Main {
                         break;
 
                     case 11:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("Enter Contact ID to edit: ");
                         String editId = sc.nextLine();
@@ -216,7 +245,10 @@ public class Main {
                         break;
 
                     case 12:
-                        if (currentUser == null) { System.out.println("Please login first."); break; }
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
 
                         System.out.print("Enter Contact ID to delete: ");
                         String deleteId = sc.nextLine();
@@ -234,6 +266,153 @@ public class Main {
                         break;
 
                     case 13:
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.print("How many contacts to delete? ");
+                        int delCount = Integer.parseInt(sc.nextLine());
+                        List<String> deleteIds = new ArrayList<>();
+                        for (int i = 1; i <= delCount; i++) {
+                            System.out.print("Contact ID " + i + ": ");
+                            deleteIds.add(sc.nextLine());
+                        }
+
+                        int deleted = contactService.bulkDeleteContacts(currentUser, deleteIds);
+                        System.out.println("Bulk delete completed. Deleted contacts: " + deleted);
+                        break;
+
+                    case 14:
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.print("How many contacts to tag? ");
+                        int tagCount = Integer.parseInt(sc.nextLine());
+                        List<String> tagIds = new ArrayList<>();
+                        for (int i = 1; i <= tagCount; i++) {
+                            System.out.print("Contact ID " + i + ": ");
+                            tagIds.add(sc.nextLine());
+                        }
+
+                        System.out.print("Enter tag: ");
+                        String tag = sc.nextLine();
+
+                        int tagged = contactService.bulkTagContacts(currentUser, tagIds, tag);
+                        System.out.println("Bulk tag completed. Updated contacts: " + tagged);
+                        break;
+
+                    case 15:
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.print("How many contacts to export? ");
+                        int exportCount = Integer.parseInt(sc.nextLine());
+                        List<String> exportIds = new ArrayList<>();
+                        for (int i = 1; i <= exportCount; i++) {
+                            System.out.print("Contact ID " + i + ": ");
+                            exportIds.add(sc.nextLine());
+                        }
+
+                        System.out.print("Enter file path (example: contacts_export.csv): ");
+                        String filePath = sc.nextLine();
+
+                        String resultPath = contactService.bulkExportContacts(currentUser, exportIds, filePath);
+                        System.out.println("Export successful: " + resultPath);
+                        break;
+
+                    case 16:
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.println("Search by:");
+                        System.out.println("1. Name");
+                        System.out.println("2. Phone");
+                        System.out.println("3. Email");
+                        System.out.println("4. Tag");
+                        System.out.print("Enter search type: ");
+                        int searchType = Integer.parseInt(sc.nextLine());
+
+                        System.out.print("Enter search keyword: ");
+                        String keyword = sc.nextLine();
+
+                        List<Contact> searchResult = new ArrayList<>();
+
+                        if (searchType == 1) {
+                            searchResult = contactService.searchByName(currentUser, keyword);
+                        } else if (searchType == 2) {
+                            searchResult = contactService.searchByPhone(currentUser, keyword);
+                        } else if (searchType == 3) {
+                            searchResult = contactService.searchByEmail(currentUser, keyword);
+                        } else if (searchType == 4) {
+                            searchResult = contactService.searchByTag(currentUser, keyword);
+                        } else {
+                            System.out.println("Invalid search type.");
+                            break;
+                        }
+
+                        if (searchResult.isEmpty()) {
+                            System.out.println("No contacts found.");
+                        } else {
+                            System.out.println("=== Search Results ===");
+                            for (Contact c : searchResult) {
+                                System.out.println(c.getId() + " | " + c.getName());
+                            }
+                        }
+                        break;
+
+                    case 17:
+                        if (currentUser == null) {
+                            System.out.println("Please login first.");
+                            break;
+                        }
+
+                        System.out.println("Filter options:");
+                        System.out.println("1. By Tag");
+                        System.out.println("2. By Date Added");
+                        System.out.println("3. By Frequently Contacted");
+                        System.out.print("Enter filter type: ");
+                        int filterType = Integer.parseInt(sc.nextLine());
+
+                        List<Contact> filtered = new ArrayList<>();
+
+                        if (filterType == 1) {
+                            System.out.print("Enter tag keyword: ");
+                            String tagKey = sc.nextLine();
+                            filtered = contactService.filterByTag(currentUser, tagKey);
+
+                        } else if (filterType == 2) {
+                            System.out.print("Newest first? (yes/no): ");
+                            boolean newestFirst = sc.nextLine().equalsIgnoreCase("yes");
+                            filtered = contactService.filterByDateAdded(currentUser, newestFirst);
+
+                        } else if (filterType == 3) {
+                            System.out.print("Most recent interaction first? (yes/no): ");
+                            boolean recentFirst = sc.nextLine().equalsIgnoreCase("yes");
+                            filtered = contactService.filterByFrequentlyContacted(currentUser, recentFirst);
+
+                        } else {
+                            System.out.println("Invalid filter type.");
+                            break;
+                        }
+
+                        if (filtered.isEmpty()) {
+                            System.out.println("No contacts found.");
+                        } else {
+                            System.out.println("=== Filtered Contacts ===");
+                            for (Contact c : filtered) {
+                                System.out.println(c.getId() + " | " + c.getName() + " | Created: " + c.getCreatedAt());
+                            }
+                        }
+                        break;
+
+                    case 18:
                         System.out.println("Exiting...");
                         sc.close();
                         return;
