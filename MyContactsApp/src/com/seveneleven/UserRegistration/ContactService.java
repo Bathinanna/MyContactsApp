@@ -7,16 +7,9 @@ import java.util.Optional;
 public class ContactService {
     private List<Contact> contacts = new ArrayList<>();
 
-    // UC-04
-    public Contact createContact(User loggedInUser,
-                                 String name,
-                                 List<String> phoneNumbers,
-                                 List<String> emailAddresses,
-                                 String company,
-                                 String notes) throws ValidationException {
-        if (loggedInUser == null) {
-            throw new ValidationException("Please login first.");
-        }
+    public Contact createContact(User loggedInUser, String name, List<String> phoneNumbers,
+                                 List<String> emailAddresses, String company, String notes) throws ValidationException {
+        if (loggedInUser == null) throw new ValidationException("Please login first.");
 
         validateName(name);
         validatePhoneList(phoneNumbers);
@@ -35,7 +28,18 @@ public class ContactService {
         return contact;
     }
 
-    // UC-04 list
+    public Optional<Contact> getContactByIdForUser(User loggedInUser, String contactId) {
+        if (loggedInUser == null || contactId == null || contactId.trim().isEmpty()) return Optional.empty();
+
+        for (Contact c : contacts) {
+            if (c.getOwnerEmail().equalsIgnoreCase(loggedInUser.getEmail()) &&
+                c.getId().equals(contactId.trim())) {
+                return Optional.of(c);
+            }
+        }
+        return Optional.empty();
+    }
+
     public List<Contact> getContactsForUser(User loggedInUser) {
         List<Contact> result = new ArrayList<>();
         if (loggedInUser == null) return result;
@@ -48,19 +52,38 @@ public class ContactService {
         return result;
     }
 
-    // UC-05 view contact details by ID
-    public Optional<Contact> getContactByIdForUser(User loggedInUser, String contactId) {
-        if (loggedInUser == null || contactId == null || contactId.trim().isEmpty()) {
-            return Optional.empty();
+    public void editContact(User loggedInUser, String contactId, String newName,
+                            List<String> newPhones, List<String> newEmails,
+                            String newCompany, String newNotes) throws ValidationException {
+        if (loggedInUser == null) throw new ValidationException("Please login first.");
+
+        Contact contact = getContactByIdForUser(loggedInUser, contactId)
+                .orElseThrow(() -> new ValidationException("Contact not found."));
+
+        validateName(newName);
+        validatePhoneList(newPhones);
+        validateEmailList(newEmails);
+
+        contact.setName(newName);
+        contact.setPhoneNumbers(newPhones);
+        contact.setEmailAddresses(newEmails);
+        contact.setCompany(newCompany == null ? "" : newCompany);
+        contact.setNotes(newNotes == null ? "" : newNotes);
+    }
+
+    // UC-07 Delete Contact (Hard Delete)
+    public void deleteContact(User loggedInUser, String contactId) throws ValidationException {
+        if (loggedInUser == null) {
+            throw new ValidationException("Please login first.");
+        }
+        if (contactId == null || contactId.trim().isEmpty()) {
+            throw new ValidationException("Contact ID is required.");
         }
 
-        for (Contact c : contacts) {
-            if (c.getOwnerEmail().equalsIgnoreCase(loggedInUser.getEmail()) &&
-                c.getId().equals(contactId.trim())) {
-                return Optional.of(c);
-            }
-        }
-        return Optional.empty();
+        Contact contact = getContactByIdForUser(loggedInUser, contactId)
+                .orElseThrow(() -> new ValidationException("Contact not found."));
+
+        contacts.remove(contact);
     }
 
     private void validateName(String name) throws ValidationException {
@@ -73,7 +96,6 @@ public class ContactService {
         if (phones == null || phones.isEmpty()) {
             throw new ValidationException("At least one phone number is required.");
         }
-
         for (String p : phones) {
             if (p == null || p.trim().isEmpty()) {
                 throw new ValidationException("Phone number cannot be empty.");
