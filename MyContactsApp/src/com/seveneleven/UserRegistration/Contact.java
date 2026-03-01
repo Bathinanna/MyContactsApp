@@ -63,6 +63,22 @@ public class Contact {
         }
     }
 
+    public void addTags(Set<Tag> inputTags) {
+        if (inputTags == null || inputTags.isEmpty()) return;
+        for (Tag t : inputTags) {
+            if (t != null) tags.add(t);
+        }
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void removeTags(Set<Tag> inputTags) {
+        if (inputTags == null || inputTags.isEmpty()) return;
+        for (Tag t : inputTags) {
+            if (t != null) tags.remove(t);
+        }
+        this.updatedAt = LocalDateTime.now();
+    }
+
     @Override
     public String toString() {
         return "Contact ID: " + id + "\n" +
