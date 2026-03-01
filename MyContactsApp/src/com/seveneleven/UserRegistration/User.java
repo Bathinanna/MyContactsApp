@@ -17,29 +17,19 @@ public class User {
         this.userType = userType;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getPasswordHash() { return passwordHash; }
+    public String getPhone() { return phone; }
+    public String getAddress() { return address; }
+    public String getUserType() { return userType; }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
+    // Required setters for UC-03 operations
+    public void setName(String name) { this.name = name; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setAddress(String address) { this.address = address; }
+    public void setUserType(String userType) { this.userType = userType; }
 
     @Override
     public String toString() {
