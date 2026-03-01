@@ -17,29 +17,20 @@ public class User {
         this.userType = userType;
     }
 
-    public String getName() {
-        return name;
-    }
+    // Getters
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getPasswordHash() { return passwordHash; }
+    public String getPhone() { return phone; }
+    public String getAddress() { return address; }
+    public String getUserType() { return userType; }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
+    // Setters (required by UserService UC3)
+    public void setName(String name) { this.name = name; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setAddress(String address) { this.address = address; }
+    public void setUserType(String userType) { this.userType = userType; }
 
     @Override
     public String toString() {

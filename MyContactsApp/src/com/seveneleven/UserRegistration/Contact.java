@@ -39,9 +39,30 @@ public class Contact {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public void setName(String name) { this.name = name; this.updatedAt = LocalDateTime.now(); }
-    public void setCompany(String company) { this.company = company; this.updatedAt = LocalDateTime.now(); }
-    public void setNotes(String notes) { this.notes = notes; this.updatedAt = LocalDateTime.now(); }
+    public void setName(String name) {
+        this.name = name;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setPhoneNumbers(List<String> phoneNumbers) {
+        this.phoneNumbers = new ArrayList<>(phoneNumbers);
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setEmailAddresses(List<String> emailAddresses) {
+        this.emailAddresses = new ArrayList<>(emailAddresses);
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+        this.updatedAt = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {

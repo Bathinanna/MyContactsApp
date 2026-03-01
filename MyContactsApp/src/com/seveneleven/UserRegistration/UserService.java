@@ -30,12 +30,8 @@ public class UserService {
 
     // UC-02 Basic Authentication support
     public Optional<User> findUserByEmailAndPassword(String email, String password) {
-        if (email == null || email.trim().isEmpty()) {
-            return Optional.empty();
-        }
-        if (password == null || password.trim().isEmpty()) {
-            return Optional.empty();
-        }
+        if (email == null || email.trim().isEmpty()) return Optional.empty();
+        if (password == null || password.trim().isEmpty()) return Optional.empty();
 
         String hashedPassword = hashPassword(password);
 
@@ -46,6 +42,43 @@ public class UserService {
             }
         }
         return Optional.empty();
+    }
+
+    // UC-03 Update Profile
+    public void updateProfile(User user, String newName, String newPhone, String newAddress) throws ValidationException {
+        if (user == null) throw new ValidationException("User is required.");
+        validateName(newName);
+        validatePhone(newPhone);
+        validateAddress(newAddress);
+
+        user.setName(newName);
+        user.setPhone(newPhone);
+        user.setAddress(newAddress);
+    }
+
+    // UC-03 Change Password
+    public void changePassword(User user, String oldPassword, String newPassword) throws ValidationException {
+        if (user == null) throw new ValidationException("User is required.");
+        if (oldPassword == null || oldPassword.trim().isEmpty()) {
+            throw new ValidationException("Old password is required.");
+        }
+
+        validatePassword(newPassword);
+
+        String oldHash = hashPassword(oldPassword);
+        if (!user.getPasswordHash().equals(oldHash)) {
+            throw new ValidationException("Old password is incorrect.");
+        }
+
+        user.setPasswordHash(hashPassword(newPassword));
+    }
+
+    // UC-03 Update Preference
+    public void updatePreference(User user, String newUserType) throws ValidationException {
+        if (user == null) throw new ValidationException("User is required.");
+        validateUserType(newUserType);
+
+        user.setUserType(newUserType.toUpperCase());
     }
 
     // ---------- Validation methods ----------
@@ -71,6 +104,9 @@ public class UserService {
     private void validatePhone(String phone) throws ValidationException {
         if (phone == null || phone.trim().isEmpty()) {
             throw new ValidationException("Phone cannot be empty.");
+        }
+        if (!phone.matches("^[0-9]{7,15}$")) {
+            throw new ValidationException("Phone must be 7 to 15 digits.");
         }
     }
 
